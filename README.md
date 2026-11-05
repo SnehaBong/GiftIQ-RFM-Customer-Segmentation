@@ -81,25 +81,11 @@ Step 4 — Power BI, Dashboard Build. Merged the segmentation results back onto 
 ```
 ## How to run
 
-**View the dashboard:** download [`dashboard/GiftIQ_RFM_Dashboard.pbix`](dashboard/GiftIQ_RFM_Dashboard.pbix) and open it in [Power BI Desktop](https://www.microsoft.com/power-platform/products/power-bi/desktop) (free). The data is already inside the file.
+Download the Online Retail II dataset from the UCI Machine Learning Repository
 
-**Run the Python part:**
-
-```bash
-git clone https://github.com/SnehaBong/GiftIQ-RFM-Customer-Segmentation.git
-cd GiftIQ-RFM-Customer-Segmentation
-pip install -r requirements.txt
-```
-
-**Option A – use the processed data:** unzip `data/processed/Sales.zip`, then open Power BI and load `Sales.csv` and `Customers.csv`.
-
-**Option B – rebuild from the source file:** put `EcommerceDashboardData.xlsx` in `data/raw/` (see [data/README.md](data/README.md)), then run the notebook or:
-
-```bash
-python scripts/prepare_powerbi_data.py
-```
-
-In Power BI, import the theme with **View → Themes → Browse for themes → `dashboard/GiftIQ_Theme.json`**.
+1. Run the SQL scripts in `01_sql` in order to recreate the cleaned `RetailCleaned` table
+2. Export `RetailCleaned` to CSV and run the notebook in `02_python` to generate the segmented dataset
+3. Open the Power BI file in `03_powerbi` and point it to the exported Excel file to refresh
 
 ## What I learned
 
