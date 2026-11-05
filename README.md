@@ -31,8 +31,8 @@ This project answers those questions with an **RFM (Recency, Frequency, Monetary
 | | Insight |
 |---|---|
 | 👑 | **Champions are 22% of customers but bring in 68% of revenue** ($11.8M of $17.4M). |
-| ⚠️ | **$1.59M is at risk.** 821 customers who used to buy often haven't come back. |
-| 📉 | **51% of customers have churned** (no purchase in 90+ days). |
+| ⚠️ | **$1.79M is at risk.** 1,208 At Risk customers have stopped buying recently. |
+| 📉 | **50.86% of customers have churned** (no purchase in 90+ days). |
 | 🎁 | **Q4 brings in 35% of yearly revenue.** Sales climb from September and peak in November. |
 | 🌍 | **83% of revenue comes from the UK**, which leaves room to grow abroad. |
 
@@ -46,7 +46,7 @@ This project answers those questions with an **RFM (Recency, Frequency, Monetary
 
 - **Source:** [UCI Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii), transactions from a UK-based online gift retailer
 - **Period:** December 2009 to December 2011
-- **Size after cleaning:** 779,405 invoice lines · 36,969 orders · 5,878 customers · 41 countries
+- **Size after cleaning:** 779,495 invoice lines · 36,975 orders · 5,881 customers · 41 countries · $17.37M revenue
 
 ## Tools
 
@@ -60,24 +60,23 @@ This project answers those questions with an **RFM (Recency, Frequency, Monetary
 ## Approach
 
 ```
-Raw transactions ──► Clean (Python) ──► RFM per customer ──► Scores 1–5 ──► 6 segments + churn flag
+Raw transactions ──► Clean (Python) ──► RFM per customer ──► Scores 1–5 ──► 5 segments + churn flag
                                                                                    │
                                      Power BI dashboard ◄── Sales.csv + Customers.csv (star schema)
 ```
 
-1. **Clean:** keep positive quantities and prices, remove duplicates, calculate `Revenue = Quantity × Price`.
+1. **Clean:** keep rows with a customer ID and a positive quantity, then calculate `Revenue = Quantity × Price`.
 2. **RFM:** for each customer, calculate days since last purchase (**R**), number of orders (**F**) and total spend (**M**).
 3. **Score:** split customers into 5 equal groups per metric with `pd.qcut`. Recency is reversed, because recent is better.
 4. **Segment:**
 
-   | Segment | Rule | Customers | Revenue |
-   |---|---|---:|---:|
-   | Champions | R ≥ 4, F ≥ 4, M ≥ 4 | 1,291 | $11.84M |
-   | Loyal | R ≥ 3, F ≥ 3 | 1,415 | $2.70M |
-   | At Risk | R ≤ 2, F ≥ 3 | 821 | $1.59M |
-   | Lost | everything else | 1,522 | $0.65M |
-   | New | R ≥ 4, F ≤ 2 | 441 | $0.39M |
-   | Needs Attention | R = 3, F ≤ 2 | 388 | $0.21M |
+   | Segment | Rule | Customers | Revenue | % of revenue |
+   |---|---|---:|---:|---:|
+   | Champions | R ≥ 4, F ≥ 4, M ≥ 4 | 1,291 | $11.84M | 68.1% |
+   | Loyal | R ≥ 3, F ≥ 3 | 1,416 | $2.70M | 15.5% |
+   | At Risk | R ≤ 2 and F ≥ 3, or R = 3 and F ≤ 2 | 1,208 | $1.79M | 10.3% |
+   | Lost | everything else | 1,524 | $0.65M | 3.8% |
+   | New | R ≥ 4, F ≤ 2 | 442 | $0.39M | 2.3% |
 
 5. **Churn:** a customer is churned if they haven't bought anything in more than 90 days.
 6. **Model:** `Customers` (dimension) and `DateTable` connect one-to-many to `Sales` (fact).
@@ -101,7 +100,7 @@ A performance table with average R, F and M scores and colour scales, a Segment/
 
 ![GiftIQ dashboard – RFM Analysis page](assets/dashboard_rfm.png)
 
-The DAX measures are listed in [docs/DAX_Measures.md](docs/DAX_Measures.md), and every column is described in [docs/Data_Dictionary.md](docs/Data_Dictionary.md).
+Every column is described in [docs/Data_Dictionary.md](docs/Data_Dictionary.md).
 
 ## Repository structure
 
@@ -112,7 +111,7 @@ GiftIQ-RFM-Customer-Segmentation/
 ├── data/
 │   ├── processed/           Customers.csv, Sales.zip (unzip to get Sales.csv)
 │   └── README.md            how to get the raw data
-├── docs/                    DAX measures and data dictionary
+├── docs/                    data dictionary
 ├── notebooks/
 │   └── 01_rfm_segmentation.ipynb
 ├── scripts/
