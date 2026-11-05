@@ -48,78 +48,37 @@ This project answers those questions with an **RFM (Recency, Frequency, Monetary
 - **Period:** December 2009 to December 2011
 - **Size after cleaning:** 779,495 invoice lines · 36,975 orders · 5,881 customers · 41 countries · $17.37M revenue
 
-## Tools
+## Tools and Tech Stack
 
 | Tool | Used for |
 |---|---|
-| Python (Pandas, Matplotlib) | Cleaning, RFM calculation, scoring, segmentation, validation |
-| Power Query | Data types and a date-only key column |
-| Power BI + DAX | Star-schema model, measures, field parameters, interactive dashboard |
-| Pillow (Python) | Generating the GiftIQ logo and dashboard backgrounds |
+|SQL Server / SSMS | Data import, cleaning, deduplication, and exploratory querying on the full 1M+ row dataset
+| Python (Pandas, Matplotlib) | Cleaning, RFM calculation, scoring, segmentation and churn flagging |
+| Jupyter Notebook | Interactive development environment for the Python analysis |
+| Power BI Desktop| Three page interactive dashboard: executive summary and RFM deep dive |
+| DAX | Measures for customer counts, revenue totals, and average customer value |
 
-## Approach
-
-```
-Raw transactions ──► Clean (Python) ──► RFM per customer ──► Scores 1–5 ──► 5 segments + churn flag
-                                                                                   │
-                                     Power BI dashboard ◄── Sales.csv + Customers.csv (star schema)
-```
-
-1. **Clean:** keep rows with a customer ID and a positive quantity, then calculate `Revenue = Quantity × Price`.
-2. **RFM:** for each customer, calculate days since last purchase (**R**), number of orders (**F**) and total spend (**M**).
-3. **Score:** split customers into 5 equal groups per metric with `pd.qcut`. Recency is reversed, because recent is better.
-4. **Segment:**
-
-   | Segment | Rule | Customers | Revenue | % of revenue |
-   |---|---|---:|---:|---:|
-   | Champions | R ≥ 4, F ≥ 4, M ≥ 4 | 1,291 | $11.84M | 68.1% |
-   | Loyal | R ≥ 3, F ≥ 3 | 1,416 | $2.70M | 15.5% |
-   | At Risk | R ≤ 2 and F ≥ 3, or R = 3 and F ≤ 2 | 1,208 | $1.79M | 10.3% |
-   | Lost | everything else | 1,524 | $0.65M | 3.8% |
-   | New | R ≥ 4, F ≤ 2 | 442 | $0.39M | 2.3% |
-
-5. **Churn:** a customer is churned if they haven't bought anything in more than 90 days.
-6. **Model:** `Customers` (dimension) and `DateTable` connect one-to-many to `Sales` (fact).
-
-## Dashboard
-
-Features: synced slicers (Month, Quarter, Year, Country, Segment, IsChurned), field-parameter toggles, page-navigation buttons, a custom theme and custom backgrounds. The report is in [`dashboard/GiftIQ_RFM_Dashboard.pbix`](dashboard/GiftIQ_RFM_Dashboard.pbix), and there's a PDF version in [`dashboard/GiftIQ_RFM_Dashboard.pdf`](dashboard/GiftIQ_RFM_Dashboard.pdf).
-
-### Home
-Title, navigation cards to the two analysis pages, and a glossary of the key metrics.
-
-![GiftIQ dashboard – Home page](assets/dashboard_home.png)
-
-### Business Overview
-KPI cards (revenue, customers, churn %, average customer value), revenue by segment, revenue retention by segment with a Revenue/Customer toggle, and revenue by month, quarter and year.
-
-![GiftIQ dashboard – Business Overview page](assets/dashboard_overview.png)
-
-### RFM Analysis
-A performance table with average R, F and M scores and colour scales, a Segment/Country toggle for average customer value, and churn % by month, quarter and year.
-
-![GiftIQ dashboard – RFM Analysis page](assets/dashboard_rfm.png)
-
-Every column is described in [docs/Data_Dictionary.md](docs/Data_Dictionary.md).
-
-## Repository structure
+## Core Concepts Demonstrated
 
 ```
-GiftIQ-RFM-Customer-Segmentation/
-├── assets/                  logo, icon and page backgrounds
-├── dashboard/               GiftIQ_RFM_Dashboard.pbix and the Power BI theme
-├── data/
-│   ├── processed/           Customers.csv, Sales.zip (unzip to get Sales.csv)
-│   └── README.md            how to get the raw data
-├── docs/                    data dictionary
-├── notebooks/
-│   └── 01_rfm_segmentation.ipynb
-├── scripts/
-│   ├── prepare_powerbi_data.py
-│   └── design/              scripts that draw the logo and backgrounds
-└── requirements.txt
-```
+RFM Analysis — scoring customers on Recency, Frequency, and Monetary value to quantify customer worth on a comparable scale
+Customer Segmentation — translating raw RFM scores into business meaningful groups (Champions, Loyal, At Risk, New, Needs Attention, Lost)
+Churn Definition and Flagging — applying a fixed inactivity threshold to identify customers at risk of lapsing
+Data Quality Handling — resolving mixed date formats, invalid type conversions, and duplicate detection using SQL window functions
+Dimensional Modeling for BI — structuring a single unified table so multiple report pages can share one clean source without manual relationships
+Interactive BI Design — slicers, bookmark based toggles, and a multi page navigation structure inside Power BI
 
+```
+## Project Workflow
+
+Step 1 — Business Requirements Document. Defined scope, business questions, key definitions, and success criteria before any data work began.
+
+Step 2 — SQL, Data Cleaning and Exploration. Imported both raw sheets into SQL Server, corrected data types, resolved a mixed date format issue affecting over half the dataset, removed 32,907 exact duplicate rows, and validated row counts at every step against the published UCI total.
+
+Step 3 — Python, RFM Segmentation. Loaded the cleaned data into pandas, calculated Recency, Frequency, and Monetary value per customer, scored each customer on a 1 to 5 scale per dimension, and assigned each of the 5,881 customers to one of six segments. Added a 90 day churn flag.
+
+Step 4 — Power BI, Dashboard Build. Merged the segmentation results back onto transaction level data to create a single analysis ready table, then built a three page report.
+```
 ## How to run
 
 **View the dashboard:** download [`dashboard/GiftIQ_RFM_Dashboard.pbix`](dashboard/GiftIQ_RFM_Dashboard.pbix) and open it in [Power BI Desktop](https://www.microsoft.com/power-platform/products/power-bi/desktop) (free). The data is already inside the file.
