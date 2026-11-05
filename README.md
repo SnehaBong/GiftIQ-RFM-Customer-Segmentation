@@ -119,7 +119,7 @@ GiftIQ-RFM-Customer-Segmentation/
 ## How to run
 
 ```bash
-git clone https://github.com/<your-username>/GiftIQ-RFM-Customer-Segmentation.git
+git clone https://github.com/SnehaBong/GiftIQ-RFM-Customer-Segmentation.git
 cd GiftIQ-RFM-Customer-Segmentation
 pip install -r requirements.txt
 ```
