@@ -103,7 +103,7 @@ The DAX measures are listed in [docs/DAX_Measures.md](docs/DAX_Measures.md), and
 ```
 GiftIQ-RFM-Customer-Segmentation/
 ├── assets/                  logo, icon and page backgrounds
-├── dashboard/               Power BI theme (and the .pbix report)
+├── dashboard/               GiftIQ_RFM_Dashboard.pbix and the Power BI theme
 ├── data/
 │   ├── processed/           Customers.csv, Sales.zip (unzip to get Sales.csv)
 │   └── README.md            how to get the raw data
@@ -117,6 +117,10 @@ GiftIQ-RFM-Customer-Segmentation/
 ```
 
 ## How to run
+
+**View the dashboard:** download [`dashboard/GiftIQ_RFM_Dashboard.pbix`](dashboard/GiftIQ_RFM_Dashboard.pbix) and open it in [Power BI Desktop](https://www.microsoft.com/power-platform/products/power-bi/desktop) (free). The data is already inside the file.
+
+**Run the Python part:**
 
 ```bash
 git clone https://github.com/SnehaBong/GiftIQ-RFM-Customer-Segmentation.git
@@ -140,3 +144,7 @@ In Power BI, import the theme with **View → Themes → Browse for themes → `
 - Why a star schema matters: scores stored once per customer don't get double-counted across purchase rows.
 - Writing DAX with `DISTINCTCOUNT`, `CALCULATE`, `DIVIDE`, `AVERAGEX` and `SUMMARIZE`, and using field parameters for interactive toggles.
 - Designing a consistent visual identity: theme, logo and backgrounds.
+
+## Author
+
+**Sneha Bose** · [GitHub](https://github.com/SnehaBong)
