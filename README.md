@@ -84,17 +84,22 @@ Raw transactions ──► Clean (Python) ──► RFM per customer ──► S
 
 ## Dashboard
 
-| Page | What it shows |
-|---|---|
-| **Home** | Title, navigation cards and a glossary of the key metrics |
-| **Business Overview** | KPIs (customers, revenue, churn %, avg customer value), revenue by segment, retention by segment with a Revenue/Customers toggle, and revenue by month, quarter and year |
-| **RFM Analysis** | Segment performance table with average R/F/M scores, avg customer value by segment or country, and churn % by month, quarter and year |
+Features: synced slicers (Month, Quarter, Year, Country, Segment, IsChurned), field-parameter toggles, page-navigation buttons, a custom theme and custom backgrounds. The report is in [`dashboard/GiftIQ_RFM_Dashboard.pbix`](dashboard/GiftIQ_RFM_Dashboard.pbix), and there's a PDF version in [`dashboard/GiftIQ_RFM_Dashboard.pdf`](dashboard/GiftIQ_RFM_Dashboard.pdf).
 
-Features: synced slicers (Month, Quarter, Year, Country, Segment, Churn status), field-parameter toggles, page-navigation buttons, a custom theme and custom backgrounds.
+### Home
+Title, navigation cards to the two analysis pages, and a glossary of the key metrics.
 
-<p align="center">
-  <img src="assets/GiftIQ_Home_Background.png" alt="GiftIQ home page design" width="800">
-</p>
+![GiftIQ dashboard – Home page](assets/dashboard_home.png)
+
+### Business Overview
+KPI cards (revenue, customers, churn %, average customer value), revenue by segment, revenue retention by segment with a Revenue/Customer toggle, and revenue by month, quarter and year.
+
+![GiftIQ dashboard – Business Overview page](assets/dashboard_overview.png)
+
+### RFM Analysis
+A performance table with average R, F and M scores and colour scales, a Segment/Country toggle for average customer value, and churn % by month, quarter and year.
+
+![GiftIQ dashboard – RFM Analysis page](assets/dashboard_rfm.png)
 
 The DAX measures are listed in [docs/DAX_Measures.md](docs/DAX_Measures.md), and every column is described in [docs/Data_Dictionary.md](docs/Data_Dictionary.md).
 
